@@ -1,0 +1,189 @@
+<rs-text-annotation-type label="Translation"
+                        rdf-type='https://dpub.cordh.net/annotation-schema/Translation'
+                        icon-url='/images/dpub/translation.svg'>
+  <template id='annotation'>
+    <semantic-query query='
+      SELECT ?iri ?label ?lang WHERE {
+        BIND({{iri}} as ?iri)
+        ?iri oa:hasBody/crm:P73_has_translation ?translation .
+        ?translation rdfs:label ?label;
+            crm:P72_has_language ?lang.
+      }' template='{{> show}}'>
+      <template id='show'>
+        {{#> dpub:AnnotationTemplate}}
+        <div class="dpub-annotation-content">
+          <mp-text-truncate lines=2 expand='<span>...<a> more</a></span>' collapse='<span>(<a>less</a>)</span>'>
+            {{bindings.0.label.value}}
+          </mp-text-truncate>
+        </div>
+        <mp-overlay-dialog title="Translation">
+          <mp-overlay-dialog-trigger>
+            <button class='btn btn-xs btn-default dpub-ctrl-buttons-style'>
+                <span class='fa fa-external-link' style='pointer-events: none;'></span>
+            </button>
+          </mp-overlay-dialog-trigger>
+          <mp-overlay-dialog-content>
+            <semantic-query query='
+              SELECT
+                ?iri
+                ?annotationType
+                ?lang
+                ?label
+                ?iriContainer
+                ?date
+                ?__useruri__
+                ?author
+                ?langLabel
+              WHERE {
+                BIND({{iri}} as ?iri)
+                  ?iri oa:hasBody/crm:P73_has_translation ?translation .
+                  ?translation a ?annotationType .
+                  ?translation rdfs:label ?label;
+                  crm:P72_has_language ?lang.
+                  ?lang rdfs:label ?langLabel .
+                BIND(IRI(CONCAT(STR({{iri}}), "/container")) as ?iriContainer)
+                  ?iriContainer <http://www.w3.org/ns/prov#generatedAtTime> ?date.
+                BIND(REPLACE(SUBSTR(STR(?__useruri__), 41), "%40", "@") as ?author)
+              }' template='{{> modal}}'>
+              <template id='modal'>
+                <div>
+                    <bs-row class="dpub-modal-line-item">
+                        <bs-col sm="3">Type:</bs-col>
+                        <bs-col sm="9">
+                            <img class="dpub-annotation-type-icon" src='/images/dpub/translation.svg'>
+                                Translation
+                        </bs-col>
+                    </bs-row>
+                    <bs-row class="dpub-modal-line-item">
+                        <bs-col sm="3">Author:</bs-col>
+                        <bs-col sm="9">
+                            <semantic-link iri={{bindings.0.__useruri__.value}}>
+                                {{bindings.0.author.value}}
+                            </semantic-link>
+                        </bs-col>
+                    </bs-row>
+                    <bs-row class="dpub-modal-line-item">
+                        <bs-col sm="3">Date:</bs-col>
+                        <bs-col sm="9">{{dateTimeFormat bindings.0.date.value "YYYY-MM-DD : h:mm:ss"}}</bs-col>
+                    </bs-row>
+                    <bs-row class="dpub-modal-line-item">
+                        <bs-col sm="3">Language:</bs-col>
+                        <bs-col sm="9">
+                            <div style="width:400px;">
+                                <a class="dpub-modal-long-iri" href='{{bindings.0.lang.value}}' target='_blank'>
+                                    {{bindings.0.lang.value}}
+                                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </bs-col>
+                    </bs-row>
+                    <bs-row class="dpub-modal-line-item">
+                      <bs-col sm="3">Language label:</bs-col>
+                      <bs-col sm="9">
+                          {{bindings.0.langLabel.value}}
+                      </bs-col>
+                    </bs-row>
+                    <bs-row class="dpub-modal-line-item">
+                        <bs-col sm="3">Translation:</bs-col>
+                        <bs-col sm="9">{{bindings.0.label.value}}</bs-col>
+                    </bs-row>
+                    <bs-row class="dpub-modal-line-item">
+                        <bs-col sm="3">Annotation IRI:</bs-col>
+                        <bs-col sm="9">
+                            <div style="width:400px;">
+                                <semantic-link class="dpub-modal-long-iri" iri={{bindings.0.iri.value}}>
+                                    <mp-text-truncate truncate="...">
+                                        {{bindings.0.iri.value}}
+                                    </mp-text-truncate>
+                                </semantic-link>
+                            </div>
+                        </bs-col>
+                    </bs-row>
+                </div>
+              </template>
+            </semantic-query>
+          </mp-overlay-dialog-content>
+        </mp-overlay-dialog>
+        {{/ dpub:AnnotationTemplate}}
+      </template>
+    </semantic-query>
+  </template>
+  <semantic-form-composite-input
+          for='oaHasBody'
+          new-subject-template='body'
+          fields='[
+              {
+                  "id": "type",
+                  "xsdDatatype": "xsd:anyURI",
+                  "selectPattern": "SELECT $value WHERE { $subject rdf:type $value }",
+                  "insertPattern": "INSERT { $subject rdf:type $value } WHERE {}"
+              },
+              {
+                  "id": "label",
+                  "label": "Label",
+                  "description": "Translation label",
+                  "xsdDatatype": "rdf:langString",
+                  "minOccurs": "1",
+                  "selectPattern": "SELECT $value WHERE { $subject crm:P73_has_translation ?lo. ?lo rdfs:label ?value }",
+                  "insertPattern": "INSERT {
+                        $subject crm:P73_has_translation ?lo.
+                        ?lo a crm:E73_Information_Object;
+                            rdfs:label $value
+                  } WHERE {
+                      BIND(URI(CONCAT(STR(?subject), \"/lo\")) as ?lo)
+                  }"
+              },
+              {
+                  "id": "lang",
+                  "label": "Language",
+                  "description": "Translation language",
+                  "xsdDatatype": "xsd:anyURI",
+                  "minOccurs": "0",
+                  "maxOccurs": "1",
+                  "selectPattern": "SELECT $value ?label WHERE {
+                      $subject crm:P73_has_translation/crm:P72_has_language $value .
+                      ?value rdfs:label ?label.                      
+                  }",
+                  "insertPattern": "INSERT {
+                      $subject crm:P73_has_translation ?lo.
+                      ?lo crm:P72_has_language $value.
+                      $value rdfs:label ?label.
+                  } WHERE {
+                    BIND(URI(CONCAT(STR(?subject), \"/lo\")) as ?lo)
+                    BIND($value as ?lang)
+                    VALUES(?lang ?label) {
+                      (<https://glottolog.org/resource/languoid/id/stan1295> \"German\")
+                      (<https://glottolog.org/resource/languoid/id/stan1290> \"French\")
+                      (<https://glottolog.org/resource/languoid/id/pica1241> \"Picard\")
+                      (<https://glottolog.org/resource/languoid/id/queb1247> \"Québécois\")
+                      (<https://glottolog.org/resource/languoid/id/acad1238> \"Acadian\")
+                      (<https://glottolog.org/resource/languoid/id/fran1263> \"Franco-Ontarien\")
+                      (<https://glottolog.org/resource/languoid/id/ital1282> \"Italian\")
+                      (<https://glottolog.org/resource/languoid/id/stan1293> \"English\")
+                    }
+                  }",
+                  "valueSetPattern": "SELECT ?value ?label WHERE {
+                    VALUES(?value ?label) {
+                      (<https://glottolog.org/resource/languoid/id/stan1295> \"German\")
+                      (<https://glottolog.org/resource/languoid/id/stan1290> \"French\")
+                      (<https://glottolog.org/resource/languoid/id/pica1241> \"Picard\")
+                      (<https://glottolog.org/resource/languoid/id/queb1247> \"Québécois\")
+                      (<https://glottolog.org/resource/languoid/id/acad1238> \"Acadian\")
+                      (<https://glottolog.org/resource/languoid/id/fran1263> \"Franco-Ontarien\")
+                      (<https://glottolog.org/resource/languoid/id/ital1282> \"Italian\")
+                      (<https://glottolog.org/resource/languoid/id/stan1293> \"English\")
+                    }
+                  } ORDER BY ASC(?label)"
+              }
+            ]'>
+    <semantic-form-hidden-input for='type'
+                                default-value='https://dpub.cordh.net/annotation-schema/Translation'>
+                                [[!- default-values='["https://dpub.cordh.net/annotation-schema/Translation", "http://www.cidoc-crm.org/cidoc-crm/E73_Information_Object"]' ]]
+    </semantic-form-hidden-input>
+    <semantic-form-text-input for='label' languages='["en", "de"]'>
+    </semantic-form-text-input>
+    <semantic-form-select-input for='lang'>
+    </semantic-form-select-input>
+    <semantic-form-errors></semantic-form-errors>
+  </semantic-form-composite-input>
+</rs-text-annotation-type>

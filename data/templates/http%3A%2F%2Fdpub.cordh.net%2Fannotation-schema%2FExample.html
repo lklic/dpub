@@ -1,0 +1,50 @@
+<rs-text-annotation-type label="Example Annotation Type"
+                         rdf-type='https://dpub.cordh.net/annotation-schema/Example'>
+  <template id='annotation'>
+    <semantic-query query='
+              SELECT ?iri ?label WHERE {
+                BIND({{iri}} as ?iri)
+                ?iri oa:hasBody ?body .
+                ?body rdfs:label ?label .
+              }' template='{{> show}}'>
+      <template id='show'>
+        {{#> dpub:AnnotationTemplate}}
+        <semantic-link iri='{{bindings.0.iri.value}}'>
+          {{#each bindings}}
+          <span>{{label.value}}</span>{{#unless @last}},{{/unless}}
+          {{/each}}
+        </semantic-link>
+        {{/ dpub:AnnotationTemplate}}
+      </template>
+    </semantic-query>
+  </template>
+  <semantic-form-composite-input
+          for='oaHasBody'
+          new-subject-template='body'
+          fields='[
+              {
+                  "id": "type",
+                  "xsdDatatype": "xsd:anyURI",
+                  "selectPattern": "SELECT $value WHERE { $subject rdf:type $value }",
+                  "insertPattern": "INSERT { $subject rdf:type $value } WHERE {}",
+                  "deletePattern": "DELETE { $subject rdf:type $value } WHERE {}"
+              },
+              {
+                  "id": "label",
+                  "label": "Label",
+                  "description": "The annotation label",
+                  "xsdDatatype": "rdf:langString",
+                  "minOccurs": "1",
+                  "selectPattern": "SELECT $value WHERE { $subject rdfs:label $value }",
+                  "insertPattern": "INSERT { $subject rdfs:label $value } WHERE {}",
+                  "deletePattern": "DELETE { $subject rdfs:label $value } WHERE {}"
+              }
+            ]'>
+    <semantic-form-hidden-input for='type'
+                                default-value='https://dpub.cordh.net/annotation-schema/Example'>
+    </semantic-form-hidden-input>
+    <semantic-form-text-input for='label' languages='["en", "de"]'>
+    </semantic-form-text-input>
+    <semantic-form-errors></semantic-form-errors>
+  </semantic-form-composite-input>
+</rs-text-annotation-type>

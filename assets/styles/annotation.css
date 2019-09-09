@@ -1,0 +1,89 @@
+.footer { display: none; }
+.page__body.dpub-editor-page {
+  margin-left: 50px;
+  padding-bottom: 0;
+  width: auto;
+}
+
+.dpub-editor-container {
+  display: flex;
+  height: calc(100vh - 114px);
+}
+
+.dpub-editor-container .AnnotationSidebar--tabIcon {
+    opacity: 0.5;
+}
+
+/* sidebar annotation */
+.dpub-annotation-template {
+    padding: 10px;
+    display: flex;
+    justify-content: start;
+    overflow-x: hidden;
+}
+
+.dpub-annotation-template div.btn-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.dpub-annotation-type-icon {
+    min-width: 30px;
+    min-height: 30px;
+    width: 30px;
+    height: 30px;
+    opacity: 0.5;
+    align-self: center;
+    margin-left: 10px;
+    margin-right: 20px;
+}
+
+.dpub-ctrl-buttons-style {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    opacity: 0.5;
+    margin: 0;
+    padding: 0;
+}
+.dpub-ctrl-buttons-style:hover,
+.dpub-ctrl-buttons-style:visited,
+.dpub-ctrl-buttons-style:focus,
+.dpub-ctrl-buttons-style:active,
+.dpub-ctrl-buttons-style:active:hover {
+    background-color: transparent;
+}
+
+.dpub-annotation-content {
+    align-self: center;
+    margin-right: 20px;
+    width: 100%;
+}
+.dpub-annotation-content.concept {
+    display: flex;
+}
+.dpub-annotation-content.concept span:first-child {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.dpub-annotation-template div.btn-group {
+    opacity: 0;
+    margin-left: 20px;
+}
+.dpub-editor-container .AnnotationSidebar--annotation.AnnotationSidebar--highlighted:hover
+.dpub-annotation-template div.btn-group {
+    opacity: 1;
+    transition: opacity 350ms ease-in;
+}
+
+/* modal annotation */
+.dpub-modal-line-item {
+    padding: 10px;
+}
+
+.dpub-modal-long-iri {
+    display: flex;
+}

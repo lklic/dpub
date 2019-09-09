@@ -1,0 +1,62 @@
+<ol class="page-breadcrumb">
+  <li class="active">Text Documents</li>
+</ol>
+
+<div class="page">
+  <div class='page__body'>
+    <semantic-context repository='default'>
+      <div>
+        <h2>Upload new document</h2>
+        <mp-file-uploader
+          placeholder="Please drag&drop your document here"
+          accept-pattern='text/html'
+          generate-iri-query='
+            SELECT ?resourceIri WHERE {
+              BIND(URI(CONCAT("http://dpub.cordh.net/document/", ?__fileName__)) as ?resourceIri)
+            }
+          '
+          resource-query='
+            PREFIX mp: <http://www.metaphacts.com/ontologies/platform#>
+            PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+            PREFIX crmdig: <http://www.ics.forth.gr/isl/CRMdig/>
+            PREFIX dpub-annotation: <http://dpub.cordh.net/annotation-schema/>
+            CONSTRUCT {
+              ?__resourceIri__ a mp:File,
+                crm:E33_Linguistic_Object,
+                crmdig:D1_Digital_Object,
+                dpub-annotation:TextDocument.
+              ?__resourceIri__ mp:fileName ?__fileName__.
+              ?__resourceIri__ mp:mediaType ?__mediaType__.
+              ?__resourceIri__ mp:fileContext ?__contextUri__.
+            } WHERE {}
+          '
+          context-uri='[[this]]'
+          storage='runtime'>
+        </mp-file-uploader>
+        <h2>Uploaded documents</h2>
+        <semantic-table
+          query='
+            PREFIX mp: <http://www.metaphacts.com/ontologies/platform#>
+            PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+            PREFIX dpub-annotation: <http://dpub.cordh.net/annotation-schema/>
+            SELECT ?document ?user ?date WHERE {
+              ?document a mp:File, dpub-annotation:TextDocument.
+              OPTIONAL {
+                ?document prov:wasAttributedTo ?user
+              }
+              OPTIONAL {
+                ?document prov:generatedAtTime ?date
+              }
+            }
+          '
+          column-configuration='[
+            {"variableName": "document", "displayName": "File name"},
+            {"variableName": "user", "displayName": "Uploaded by user"},
+            {"variableName": "date", "displayName": "Created at"}
+          ]'
+          no-result-template='No documents uploaded yet.'>
+        </semantic-table>
+      </div>
+    </semantic-context>
+  </div>
+</div>

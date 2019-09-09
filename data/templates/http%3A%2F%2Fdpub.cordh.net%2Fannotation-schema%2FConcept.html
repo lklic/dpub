@@ -1,0 +1,113 @@
+<rs-text-annotation-type label="Concept"
+                         rdf-type='https://dpub.cordh.net/annotation-schema/Concept'
+                         icon-url='/images/dpub/concept.svg'>
+  <template id='annotation'>
+    <semantic-query query='
+              SELECT ?iri ?label ?concept WHERE {
+                BIND({{iri}} as ?iri)
+                ?iri oa:hasBody ?conceptAnnot .
+                ?conceptAnnot rdf:value ?concept.
+                OPTIONAL {?concept rdfs:label ?label.}
+              }' template='{{> show}}'>
+      <template id='show'>
+        {{#> dpub:AnnotationTemplate}}
+        <div class="dpub-annotation-content concept">
+          <span>Concept:</span>
+          <span>{{bindings.0.label.value}}</span>
+        </div>
+        <mp-overlay-dialog title="Concept">
+          <mp-overlay-dialog-trigger>
+            <button class='btn btn-xs btn-default dpub-ctrl-buttons-style'>
+              <span class='fa fa-external-link' style='pointer-events: none;'></span>
+            </button>
+          </mp-overlay-dialog-trigger>
+          <mp-overlay-dialog-content>
+            <semantic-query query='
+            SELECT
+              ?iri
+              ?annotationType
+              ?concept
+              ?label
+              ?iriContainer
+              ?date
+              ?__useruri__
+              ?author
+            WHERE {
+              BIND({{iri}} as ?iri)
+                ?iri oa:hasBody ?conceptAnnot .
+                ?conceptAnnot a ?annotationType .
+                ?conceptAnnot rdf:value ?concept.
+                OPTIONAL {?concept rdfs:label ?label.}
+              BIND(IRI(CONCAT(STR({{iri}}), "/container")) as ?iriContainer)
+                ?iriContainer <http://www.w3.org/ns/prov#generatedAtTime> ?date.
+              BIND(REPLACE(SUBSTR(STR(?__useruri__), 41), "%40", "@") as ?author)
+            }' template='{{> modal}}'>
+              <template id='modal'>
+                <div>
+                  <bs-row class="dpub-modal-line-item">
+                    <bs-col sm="3">Type:</bs-col>
+                    <bs-col sm="9">
+                      <img class="dpub-annotation-type-icon" src='/images/dpub/concept.svg'>
+                        Concept
+                    </bs-col>
+                  </bs-row>
+                  <bs-row class="dpub-modal-line-item">
+                    <bs-col sm="3">Author:</bs-col>
+                    <bs-col sm="9">
+                      <semantic-link iri={{bindings.0.__useruri__.value}}>
+                        {{bindings.0.author.value}}
+                      </semantic-link>
+                    </bs-col>
+                  </bs-row>
+                  <bs-row class="dpub-modal-line-item">
+                    <bs-col sm="3">Date:</bs-col>
+                    <bs-col sm="9">{{dateTimeFormat bindings.0.date.value "YYYY-MM-DD : h:mm:ss"}}</bs-col>
+                  </bs-row>
+                  <bs-row class="dpub-modal-line-item">
+                    <bs-col sm="3">Concept:</bs-col>
+                    <bs-col sm="9">
+                      <div style="width:400px;">
+                        <a class="dpub-modal-long-iri" href='{{bindings.0.concept.value}}' target='_blank'>
+                          {{bindings.0.concept.value}}
+                          <i class="fa fa-external-link" aria-hidden="true"></i>
+                        </a>
+                      </div>
+                    </bs-col>
+                  </bs-row>
+                  <bs-row class="dpub-modal-line-item">
+                    <bs-col sm="3">Label:</bs-col>
+                    <bs-col sm="9">{{bindings.0.label.value}}</bs-col>
+                  </bs-row>
+                  <bs-row class="dpub-modal-line-item">
+                    <bs-col sm="3">Annotation IRI:</bs-col>
+                    <bs-col sm="9">
+                      <div style="width:400px;">
+                        <semantic-link class="dpub-modal-long-iri" iri={{bindings.0.iri.value}}>
+                          <mp-text-truncate truncate="...">
+                            {{bindings.0.iri.value}}
+                          </mp-text-truncate>
+                        </semantic-link>
+                      </div>
+                    </bs-col>
+                  </bs-row>
+                </div>
+              </template>
+            </semantic-query>
+          </mp-overlay-dialog-content>
+        </mp-overlay-dialog>
+        {{/ dpub:AnnotationTemplate}}
+      </template>
+    </semantic-query>
+  </template>
+  <semantic-form-composite-input
+          for='oaHasBody'
+          new-subject-template='body'
+          fields='[[fieldDefinitions type="http://www.metaphacts.com/fieldDefinition/Type" concept="http://www.researchspace.org/instances/fields/Concept"]]'>
+    <semantic-form-hidden-input for='type'
+                                default-value='https://dpub.cordh.net/annotation-schema/Concept'>
+    </semantic-form-hidden-input>
+    <semantic-form-autocomplete-input for='concept'>
+    </semantic-form-autocomplete-input>
+    <semantic-form-errors></semantic-form-errors>
+  </semantic-form-composite-input>
+</rs-text-annotation-type>

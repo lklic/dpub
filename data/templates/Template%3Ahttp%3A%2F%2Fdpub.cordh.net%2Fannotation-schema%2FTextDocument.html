@@ -1,0 +1,61 @@
+<link href="/assets/styles/annotation.css" rel="stylesheet"/>
+<ol class="page-breadcrumb">
+  <li>
+    <semantic-link iri="http://www.researchspace.org/resource/TextDocuments">Text Documents</semantic-link>
+  </li>
+  <li class="active">Document</li>
+</ol>
+
+<div class="page">
+  <div class="page__body dpub-editor-page">
+    <div class="dpub-editor-container">
+      <semantic-context repository='default'>
+        <rs-text-annotation-workspace
+          document-iri='[[this]]'
+          storage='runtime'
+          annotation-subject-template='http://dpub.cordh.net/annotation/{{UUID}}'
+          fallback-template='{{> fallback-template}}'
+          annotation-tooltip='{{> annotation-tooltip}}'>
+
+          <template id='fallback-template'>
+            {{#> dpub:AnnotationTemplate}}
+              Missing type for annotation <semantic-link iri='{{iri.value}}'></semantic-link>
+            {{/ dpub:AnnotationTemplate}}
+          </template>
+
+          <template id='annotation-tooltip'>
+            <div>
+              {{#if allowEdit}}
+                <button name='edit' class='btn btn-xs btn-default'
+                  data-annotation='{{iri.value}}'
+                  title='Edit annotation'>
+                  <span class='fa fa-pencil' style='pointer-events: none;'></span>
+                </button>
+              {{else}}
+                <button name='edit' class='btn btn-xs btn-default' disabled
+                  title='Edit annotation'>
+                  <span class='fa fa-pencil' style='pointer-events: none;'></span>
+                </button>
+              {{/if}}
+              {{#if allowDelete}}
+                <button name='delete' class='btn btn-xs btn-default'
+                  data-annotation='{{iri.value}}'
+                  title='Delete annotation'>
+                  <span class='fa fa-trash' style='pointer-events: none;'></span>
+                </button>
+              {{else}}
+                <button name='delete' class='btn btn-xs btn-default' disabled
+                  title='Delete annotation'>
+                  <span class='fa fa-trash' style='pointer-events: none;'></span>
+                </button>
+              {{/if}}
+            </div>
+          </template>
+
+          [[> dpub-annotation:Translation ]]
+          [[> dpub-annotation:Concept ]]
+        </rs-text-annotation-workspace>
+      </semantic-context>
+    </div>
+  </div>
+</div>

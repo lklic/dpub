@@ -1,0 +1,53 @@
+
+<http://www.researchspace.org/instances/fields/Concept/context> {
+  <http://www.researchspace.org/instances/fields/Concept> a <http://www.metaphacts.com/ontology/fields#Field>;
+    <http://www.w3.org/2000/01/rdf-schema#comment> "Concept from Getty";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Concept"@en;
+    <http://www.metaphacts.com/ontology/fields#insertPattern> _:genid-9ff715b2acf449ea9bfc000095f2bbb8-AA98DE8DF3B3C7816F768AC465B8A20D;
+    <http://www.metaphacts.com/ontology/fields#selectPattern> _:genid-9ff715b2acf449ea9bfc000095f2bbb8-A2C28E3D6D1303EE7F503DEE2AD26967;
+    <http://www.metaphacts.com/ontology/fields#xsdDatatype> <http://www.w3.org/2001/XMLSchema#anyURI>;
+    <http://www.metaphacts.com/ontology/fields#autosuggestionPattern> _:genid-9ff715b2acf449ea9bfc000095f2bbb8-D775F5C40BC23922A149FD9754A47F5C;
+    <http://www.metaphacts.com/ontology/fields#maxOccurs> "1";
+    <http://www.metaphacts.com/ontology/fields#minOccurs> "0" .
+  
+  _:genid-9ff715b2acf449ea9bfc000095f2bbb8-D775F5C40BC23922A149FD9754A47F5C a <http://spinrdf.org/sp#Query>;
+    <http://spinrdf.org/sp#text> """PREFIX aat: <http://vocab.getty.edu/aat/>
+                      PREFIX gvp: <http://vocab.getty.edu/ontology#>
+                      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+                      PREFIX luc: <http://www.ontotext.com/owlim/lucene#>
+                      SELECT ?value ?label WHERE {
+
+                        SERVICE <http://vocab.getty.edu/sparql> {
+                        ?value gvp:broaderExtended aat:300264091 ;
+                        skos:prefLabel ?label;
+                                luc:term \"?token\"
+    					FILTER LANGMATCHES(LANG(?label), \"en\")
+                          }
+                        } LIMIT 50""" .
+  
+  _:genid-9ff715b2acf449ea9bfc000095f2bbb8-AA98DE8DF3B3C7816F768AC465B8A20D a <http://spinrdf.org/sp#Query>;
+    <http://spinrdf.org/sp#text> """INSERT { 
+  $subject rdf:value $value.
+  $value rdfs:label ?label
+} WHERE {
+  SERVICE <http://vocab.getty.edu/sparql> {
+  	?value skos:prefLabel ?label;
+      FILTER LANGMATCHES(LANG(?label), \"en\")
+  }
+}""" .
+  
+  _:genid-9ff715b2acf449ea9bfc000095f2bbb8-A2C28E3D6D1303EE7F503DEE2AD26967 a <http://spinrdf.org/sp#Query>;
+    <http://spinrdf.org/sp#text> """SELECT $value WHERE {
+  $subject rdf:value $value .
+}""" .
+  
+  <http://www.researchspace.org/instances/fields/Concept> a <http://www.w3.org/ns/prov#Entity>;
+    <http://www.w3.org/ns/prov#wasAttributedTo> <http://www.metaphacts.com/resource/user/admin>;
+    <http://www.w3.org/ns/prov#generatedAtTime> "2019-06-21T13:21:33.527+03:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+  
+  <http://www.metaphacts.com/ontologies/platform#fieldDefinitionContainer> <http://www.w3.org/ns/ldp#contains>
+      <http://www.researchspace.org/instances/fields/Concept> .
+  
+  <http://www.researchspace.org/instances/fields/Concept> a <http://www.w3.org/ns/ldp#Resource> .
+}

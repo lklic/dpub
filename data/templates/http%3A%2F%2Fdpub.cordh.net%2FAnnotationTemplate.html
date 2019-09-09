@@ -1,0 +1,24 @@
+<div class="dpub-annotation-template" style='border-left: 10px solid {{color}}'>
+  {{#if iconUrl}}
+    <img class="dpub-annotation-type-icon" src='{{iconUrl}}'>
+  {{/if}}
+  {{> @partial-block}}
+  <div class='btn-group'>
+    {{#if allowEdit}}
+    <button name='edit'
+      class='btn btn-xs btn-default dpub-ctrl-buttons-style'
+      data-annotation='{{iri.value}}'
+      title='Edit annotation'>
+      <span class='fa fa-pencil' style='pointer-events: none;'></span>
+    </button>
+    {{/if}}
+    {{#if allowDelete}}
+    <button name='delete'
+      class='btn btn-xs btn-default dpub-ctrl-buttons-style'
+      data-annotation='{{iri.value}}'
+      title='Delete annotation'>
+      <span class='fa fa-trash' style='pointer-events: none;'></span>
+    </button>
+    {{/if}}
+  </div>
+</div>
