@@ -1,0 +1,28 @@
+
+<http://www.metaphacts.com/fieldDefinition/Type/context> {
+  <http://www.metaphacts.com/fieldDefinition/Type> a <http://www.metaphacts.com/ontology/fields#Field>;
+    <http://www.w3.org/2000/01/rdf-schema#label> "Type"@en;
+    <http://www.metaphacts.com/ontology/fields#xsdDatatype> <http://www.w3.org/2001/XMLSchema#anyURI> .
+  
+  _:genid-76489d323f034e7aa7704f767257df43-ugu63m <http://spinrdf.org/sp#text> "SELECT ?value WHERE { $subject rdf:type ?value. }" .
+  
+  <http://www.metaphacts.com/fieldDefinition/Type> <http://www.metaphacts.com/ontology/fields#insertPattern>
+      _:genid-76489d323f034e7aa7704f767257df43-0mfqmw;
+    <http://www.metaphacts.com/ontology/fields#selectPattern> _:genid-76489d323f034e7aa7704f767257df43-ugu63m .
+  
+  _:genid-76489d323f034e7aa7704f767257df43-0mfqmw <http://spinrdf.org/sp#text> "INSERT { $subject rdf:type $value} WHERE {}";
+    a <http://spinrdf.org/sp#Query> .
+  
+  _:genid-76489d323f034e7aa7704f767257df43-ugu63m a <http://spinrdf.org/sp#Query> .
+  
+  <http://www.metaphacts.com/fieldDefinition/Type> <http://www.metaphacts.com/ontology/fields#maxOccurs>
+      "1";
+    a <http://www.w3.org/ns/prov#Entity>;
+    <http://www.w3.org/ns/prov#wasAttributedTo> <http://www.metaphacts.com/resource/user/lklic>;
+    <http://www.w3.org/ns/prov#generatedAtTime> "2019-09-27T12:47:28.591Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+  
+  <http://www.metaphacts.com/ontologies/platform#fieldDefinitionContainer> <http://www.w3.org/ns/ldp#contains>
+      <http://www.metaphacts.com/fieldDefinition/Type> .
+  
+  <http://www.metaphacts.com/fieldDefinition/Type> a <http://www.w3.org/ns/ldp#Resource> .
+}
