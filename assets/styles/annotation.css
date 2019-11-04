@@ -6,7 +6,6 @@
 }
 
 .dpub-editor-container {
-  display: flex;
   height: calc(100vh - 114px);
 }
 

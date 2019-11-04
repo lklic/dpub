@@ -1,7 +1,9 @@
-<link href="/assets/styles/annotation.css" rel="stylesheet"/>
+<link href="/assets/styles/annotation.css" rel="stylesheet" />
 <ol class="page-breadcrumb">
   <li>
-    <semantic-link iri="http://www.researchspace.org/resource/TextDocuments">Text Documents</semantic-link>
+    <semantic-link iri="http://www.researchspace.org/resource/TextDocuments"
+      >Text Documents</semantic-link
+    >
   </li>
   <li class="active">Document</li>
 </ol>
@@ -9,51 +11,122 @@
 <div class="page">
   <div class="page__body dpub-editor-page">
     <div class="dpub-editor-container">
-      <semantic-context repository='default'>
-        <rs-text-annotation-workspace
-          document-iri='[[this]]'
-          storage='runtime'
-          annotation-subject-template='http://dpub.cordh.net/annotation/{{UUID}}'
-          fallback-template='{{> fallback-template}}'
-          annotation-tooltip='{{> annotation-tooltip}}'>
+      
+      <mp-field-visualization
+        subject="[[this]]"
+        fields='[[fieldDefinitionsFromQuery "SELECT ?field WHERE { ?field <http://www.metaphacts.com/ontology/fields#domain> crm:E33_Linguistic_Object}"]]'
+        template="{{> metadata}}"
+      >
+        <template id="metadata">
+          <div>
+            <div data-flex-layout="row">
+              <div>
+                <h2>Metadata</h2>
+              </div>
+            </div>
+            {{#each fields}}
+            {{> field}}
+            {{/each}}
+          </div>
+        </template>
+        <template id="field">
+          <!-- Places -->
+          {{#ifCond this.label.0._value "===" "Letter_places"}}
+          {{#each this.values}}
+          {{> row lbl=label val=value._value}}
+          {{/each}}
+          {{/ifCond}}
 
-          <template id='fallback-template'>
+          <!-- Date -->
+          {{#ifCond this.label.0._value "===" "Letter_date"}}
+          {{> row lbl="Date" val=this.values.0.value._value}}
+          {{/ifCond}}
+
+          <!-- People -->
+          {{#ifCond this.label.0._value "===" "Letter_people"}}
+          {{#each this.values}}
+          {{> row lbl=label val=value._value}}
+          {{/each}}
+          {{/ifCond}}
+
+          <!-- Title -->
+          {{#ifCond this.label.0._value "===" "Letter_title"}}
+          {{> row lbl="Title" val=this.values.0.value._value}}
+          {{/ifCond}}
+        </template>
+
+        <template id="row">
+          <div data-flex-layout="row">
+            <bs-col sm="2" md="3">
+              <b>{{ lbl }}:</b>
+            </bs-col>
+            <bs-col sm="2" md="9">
+              {{ val }}
+            </bs-col>
+          </div>
+        </template>
+      </mp-field-visualization>
+
+      <!-- Document body + annotation sidebar -->
+      <semantic-context repository="default">
+        <rs-text-annotation-workspace
+          document-iri="[[this]]"
+          storage="runtime"
+          annotation-subject-template="http://dpub.cordh.net/annotation/{{UUID}}"
+          fallback-template="{{> fallback-template}}"
+          annotation-tooltip="{{> annotation-tooltip}}"
+        >
+          <template id="fallback-template">
             {{#> dpub:AnnotationTemplate}}
-              Missing type for annotation <semantic-link iri='{{iri.value}}'></semantic-link>
+            Missing type for annotation
+            <semantic-link iri="{{ iri.value }}"></semantic-link>
             {{/ dpub:AnnotationTemplate}}
           </template>
 
-          <template id='annotation-tooltip'>
+          <template id="annotation-tooltip">
             <div>
               {{#if allowEdit}}
-                <button name='edit' class='btn btn-xs btn-default'
-                  data-annotation='{{iri.value}}'
-                  title='Edit annotation'>
-                  <span class='fa fa-pencil' style='pointer-events: none;'></span>
-                </button>
+              <button
+                name="edit"
+                class="btn btn-xs btn-default"
+                data-annotation="{{ iri.value }}"
+                title="Edit annotation"
+              >
+                <span class="fa fa-pencil" style="pointer-events: none;"></span>
+              </button>
               {{else}}
-                <button name='edit' class='btn btn-xs btn-default' disabled
-                  title='Edit annotation'>
-                  <span class='fa fa-pencil' style='pointer-events: none;'></span>
-                </button>
+              <button
+                name="edit"
+                class="btn btn-xs btn-default"
+                disabled
+                title="Edit annotation"
+              >
+                <span class="fa fa-pencil" style="pointer-events: none;"></span>
+              </button>
               {{/if}}
               {{#if allowDelete}}
-                <button name='delete' class='btn btn-xs btn-default'
-                  data-annotation='{{iri.value}}'
-                  title='Delete annotation'>
-                  <span class='fa fa-trash' style='pointer-events: none;'></span>
-                </button>
+              <button
+                name="delete"
+                class="btn btn-xs btn-default"
+                data-annotation="{{ iri.value }}"
+                title="Delete annotation"
+              >
+                <span class="fa fa-trash" style="pointer-events: none;"></span>
+              </button>
               {{else}}
-                <button name='delete' class='btn btn-xs btn-default' disabled
-                  title='Delete annotation'>
-                  <span class='fa fa-trash' style='pointer-events: none;'></span>
-                </button>
+              <button
+                name="delete"
+                class="btn btn-xs btn-default"
+                disabled
+                title="Delete annotation"
+              >
+                <span class="fa fa-trash" style="pointer-events: none;"></span>
+              </button>
               {{/if}}
             </div>
           </template>
 
-          [[> dpub-annotation:Translation ]]
-          [[> dpub-annotation:Concept ]]
+          [[> dpub-annotation:Translation ]] [[> dpub-annotation:Concept ]]
         </rs-text-annotation-workspace>
       </semantic-context>
     </div>
