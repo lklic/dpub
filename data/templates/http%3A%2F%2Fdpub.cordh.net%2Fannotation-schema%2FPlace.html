@@ -1,0 +1,65 @@
+<rs-text-annotation-type label="Place"
+                         rdf-type='https://dpub.cordh.net/annotation-schema/Place'
+                         icon-url='/images/dpub/map-marker.svg'>
+  <template id='annotation'>
+    <semantic-query query='
+              SELECT ?iri ?label WHERE {
+                BIND({{iri}} as ?iri)
+                ?iri oa:hasBody ?body .
+                ?body rdfs:label ?label .
+              }' template='{{> show}}'>
+      <template id='show'>
+        {{#> dpub:AnnotationTemplate}}
+        <div class="dpub-annotation-content concept">
+            <span>Person:</span>
+            <a href="{{bindings.1.label.value}}">{{bindings.0.label.value}}</a>
+        </div>
+
+        {{/ dpub:AnnotationTemplate}}
+      </template>
+    </semantic-query>
+  </template>
+  <semantic-form-composite-input
+          for='oaHasBody'
+          new-subject-template='body'
+          fields='[
+              {
+                "id": "type",
+                "xsdDatatype": "xsd:anyURI",
+                "selectPattern": "SELECT $value WHERE { $subject rdf:type $value }",
+                "insertPattern": "INSERT { $subject rdf:type $value } WHERE {}",
+                "deletePattern": "DELETE { $subject rdf:type $value } WHERE {}"
+              },
+              {
+                "id": "uri",
+                "label": "Wikidata URI",
+                "description": "Wikidata URI",
+                "xsdDatatype": "xsd:anyURI",
+                "minOccurs": "1",
+                "maxOccurs": "1",
+                "selectPattern": "SELECT $value WHERE { $subject rdfs:label $value }",
+                "insertPattern": "INSERT { $subject rdfs:label $value } WHERE {}",
+                "deletePattern": "DELETE { $subject rdfs:label $value } WHERE {}" 
+              },
+              {
+                "id": "label",
+                "label": "Label",
+                "description": "Label",
+                "xsdDatatype": "rdf:langString",
+                "minOccurs": "1",
+                "maxOccurs": "1",
+                "selectPattern": "SELECT $value WHERE { $subject rdfs:label $value }",
+                "insertPattern": "INSERT { $subject rdfs:label $value } WHERE {}",
+                "deletePattern": "DELETE { $subject rdfs:label $value } WHERE {}"
+              }
+            ]'>
+    <semantic-form-hidden-input for='type'
+                                default-value='https://dpub.cordh.net/annotation-schema/Place'>
+    </semantic-form-hidden-input>
+    <semantic-form-text-input for='uri'
+                                default-value='http://www.wikidata.org/entity/'>
+    </semantic-form-text-input>
+    <semantic-form-text-input for='label' languages='["en"]'></semantic-form-text-input>
+    <semantic-form-errors></semantic-form-errors>
+  </semantic-form-composite-input>
+</rs-text-annotation-type>
