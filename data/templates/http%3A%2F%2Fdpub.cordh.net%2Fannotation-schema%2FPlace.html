@@ -11,7 +11,7 @@
       <template id='show'>
         {{#> dpub:AnnotationTemplate}}
         <div class="dpub-annotation-content concept">
-            <span>Person:</span>
+            <span>Place:</span>
             <a href="{{bindings.1.label.value}}">{{bindings.0.label.value}}</a>
         </div>
 
@@ -59,7 +59,7 @@
     <semantic-form-text-input for='uri'
                                 default-value='http://www.wikidata.org/entity/'>
     </semantic-form-text-input>
-    <semantic-form-text-input for='label' languages='["en"]'></semantic-form-text-input>
+    <semantic-form-text-input for='label'></semantic-form-text-input>
     <semantic-form-errors></semantic-form-errors>
   </semantic-form-composite-input>
 </rs-text-annotation-type>
